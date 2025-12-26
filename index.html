@@ -1,0 +1,1783 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>天启科技</title>
+    <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/3.5.0/model-viewer.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: Arial, sans-serif;
+            color: #333;
+            line-height: 1.6;
+        }
+        
+        header {
+            background-color: #fff;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            position: fixed;
+            width: 100%;
+            top: 0;
+            left: 0;
+            z-index: 1000;
+            height: 48px;
+            margin: 0;
+            padding: 0;
+        }
+        
+        nav {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0.4rem 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            height: 100%;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+        }
+        
+        .logo img {
+            height: 30px;
+            margin-right: 1rem;
+        }
+        
+        .nav-links {
+            display: flex;
+            list-style: none;
+            margin: 0;
+            padding: 0;
+        }
+        
+        .nav-links li {
+            margin: 0 1rem;
+        }
+        
+        .nav-links a {
+            text-decoration: none;
+            color: #333;
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+        
+        .nav-links a:hover {
+            color: #0066cc;
+        }
+        
+        .hero {
+            margin-top: 0;
+            padding-top: 48px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .banner-carousel {
+            position: relative;
+            width: 100%;
+            overflow: hidden;
+        }
+        
+        .carousel-content {
+            display: flex;
+            transition: transform 0.5s ease;
+        }
+        
+        .carousel-item {
+            flex: 0 0 100%;
+            position: relative;
+            width: 100%;
+            height: 31rem;
+            overflow: hidden;
+        }
+        
+        @media (min-width: 768px) {
+            .carousel-item {
+                height: 650px;
+            }
+        }
+        
+        @media (min-width: 1024px) {
+            .carousel-item {
+                height: 780px;
+            }
+        }
+        
+        .carousel-item img,
+        .carousel-item video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .carousel-prev,
+        .carousel-next {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background-color: rgba(0, 0, 0, 0.5);
+            color: white;
+            border: none;
+            width: 50px;
+            height: 50px;
+            font-size: 2rem;
+            cursor: pointer;
+            z-index: 10;
+            transition: background-color 0.3s ease;
+        }
+        
+        .carousel-prev:hover,
+        .carousel-next:hover {
+            background-color: rgba(0, 0, 0, 0.8);
+        }
+        
+        .carousel-prev {
+            left: 20px;
+        }
+        
+        .carousel-next {
+            right: 20px;
+        }
+        
+        .carousel-indicators {
+            position: absolute;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 8px;
+            z-index: 10;
+        }
+        
+        .carousel-indicator {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background-color: rgba(255, 255, 255, 0.5);
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .carousel-indicator.active {
+            background-color: white;
+            transform: scale(1.25);
+        }
+        
+        .banner-overlay {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(to bottom, rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.2));
+            display: flex;
+            align-items: center;
+            z-index: 5;
+        }
+        
+        .hero-content {
+            color: white;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+        }
+        
+        .hero-content h1 {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+        }
+        
+        @media (min-width: 768px) {
+            .hero-content h1 {
+                font-size: 2.8rem;
+            }
+        }
+        
+        @media (min-width: 1024px) {
+            .hero-content h1 {
+                font-size: 3.6rem;
+            }
+        }
+        
+        .hero-content p {
+            font-size: 1.1rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        @media (min-width: 768px) {
+            .hero-content p {
+                font-size: 1.5rem;
+            }
+        }
+        
+        @media (min-width: 1024px) {
+            .hero-content p {
+                font-size: 1.8rem;
+            }
+        }
+        
+        .banner-cta {
+            position: absolute;
+            bottom: 30px;
+            left: 0;
+            right: 0;
+            z-index: 10;
+        }
+        
+        .banner-cta .btn {
+            background-color: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(5px);
+            border: 2px solid white;
+            padding: 12px 30px;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+        }
+        
+        .banner-cta .btn:hover {
+            background-color: rgba(0, 0, 0, 0.7);
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+        }
+        
+        section {
+            padding: 4rem 0;
+        }
+        
+        h2 {
+            text-align: center;
+            margin-bottom: 2rem;
+            color: #333;
+        }
+        
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+        
+        .card {
+            background-color: #f9f9f9;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
+        }
+        
+        .card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .card img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+        }
+        
+        .card-content {
+            padding: 1.5rem;
+        }
+        
+        .card-content h3 {
+            margin-bottom: 1rem;
+            color: #333;
+        }
+        
+        .card-content p {
+            color: #666;
+            margin-bottom: 1rem;
+        }
+        
+        .btn {
+            display: inline-block;
+            background-color: #0066cc;
+            color: white;
+            padding: 0.8rem 1.5rem;
+            text-decoration: none;
+            border-radius: 4px;
+            transition: background-color 0.3s ease;
+        }
+        
+        .btn:hover {
+            background-color: #0052a3;
+        }
+        
+        footer {
+            background-color: #333;
+            color: white;
+            text-align: center;
+            padding: 2rem 0;
+        }
+        
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 1rem;
+        }
+        
+        .models-section {
+            background-color: #f5f5f5;
+        }
+        
+        .model-container {
+            height: 600px;
+            background-color: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        /* Model Display Container */
+        .model-display-container {
+            margin-top: 2rem;
+        }
+        
+        /* Three-column layout */
+        .model-layout {
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+            height: 600px;
+        }
+        
+        @media (min-width: 1024px) {
+            .model-layout {
+                flex-direction: row;
+            }
+        }
+        
+        /* Model List (Left column) */
+        .model-list {
+            flex: 1;
+            background-color: white;
+            border-radius: 16px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+        
+        .model-list-inner {
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            padding: 1rem;
+        }
+        
+        .model-list h3 {
+            text-align: center;
+            margin-bottom: 1rem;
+            font-size: 1.2rem;
+            color: #333;
+        }
+        
+        .model-items {
+            flex: 1;
+            overflow-y: auto;
+            padding-right: 0.5rem;
+        }
+        
+        /* Custom scrollbar */
+        .model-items::-webkit-scrollbar {
+            width: 6px;
+        }
+        
+        .model-items::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 3px;
+        }
+        
+        .model-items::-webkit-scrollbar-thumb {
+            background: #888;
+            border-radius: 3px;
+        }
+        
+        .model-items::-webkit-scrollbar-thumb:hover {
+            background: #555;
+        }
+        
+        .model-item {
+            padding: 1rem;
+            margin-bottom: 0.8rem;
+            border-radius: 12px;
+            background-color: #f9f9f9;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+        }
+        
+        .model-item:hover {
+            background-color: #e9e9e9;
+        }
+        
+        .model-item.active {
+            background-color: #0066cc;
+            color: white;
+            border-color: #0052a3;
+        }
+        
+        /* Model Viewer Container (Middle column) */
+        .model-viewer-container {
+            flex: 4;
+            background-color: white;
+            border-radius: 16px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+        
+        /* Model Info (Right column) */
+        .model-info {
+            flex: 1;
+            background-color: white;
+            border-radius: 16px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+        
+        .model-info-inner {
+            height: 100%;
+            padding: 1.5rem;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .model-info h3 {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            color: #333;
+        }
+        
+        .model-info p {
+            color: #666;
+            line-height: 1.6;
+            margin-bottom: 1rem;
+        }
+        
+        .model-info .model-actions {
+            margin-top: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+        
+        .model-info .btn {
+            width: 100%;
+            text-align: center;
+            padding: 0.8rem;
+            border-radius: 8px;
+            font-weight: 500;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+        
+        .model-info .btn-primary {
+            background-color: #0066cc;
+            color: white;
+        }
+        
+        .model-info .btn-primary:hover {
+            background-color: #0052a3;
+        }
+        
+        .model-info .btn-secondary {
+            background-color: white;
+            color: #0066cc;
+            border: 2px solid #0066cc;
+        }
+        
+        .model-info .btn-secondary:hover {
+            background-color: #f0f0f0;
+        }
+        
+        /* Model Viewer Custom Styles */
+        model-viewer {
+            width: 100%;
+            height: 100%;
+            background-color: #f0f0f0;
+        }
+        
+        /* Add wheel zoom support */
+        model-viewer {
+            touch-action: pan-x pan-y pinch-zoom;
+        }
+        
+        /* Solutions Grid */
+        .solutions-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+        
+        /* Solution Card */
+        .solution-card {
+            position: relative;
+            overflow: hidden;
+            border-radius: 16px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            transition: all 0.5s ease;
+            aspect-ratio: 4/3;
+            background-color: #f0f0f0;
+        }
+        
+        .solution-card:hover {
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
+            transform: translateY(-5px);
+        }
+        
+        .solution-card-image-container {
+            position: absolute;
+            inset: 0;
+            transition: all 0.5s ease;
+            overflow: hidden;
+        }
+        
+        .solution-card:hover .solution-card-image-container {
+            transform: scale(1.05) rotate(1deg);
+        }
+        
+        .solution-card img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: opacity 0.5s ease;
+        }
+        
+        /* Gradient Overlays */
+        .solution-card-gradient-full {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(to top, rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.3), transparent);
+            opacity: 0;
+            transition: opacity 0.5s ease;
+            z-index: 1;
+        }
+        
+        .solution-card:hover .solution-card-gradient-full {
+            opacity: 1;
+        }
+        
+        .solution-card-gradient-bottom {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 80px;
+            background: linear-gradient(to top, rgba(0, 0, 0, 0.7), transparent);
+            z-index: 1;
+        }
+        
+        /* Solution Content */
+        .solution-card-content {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            padding: 1.5rem;
+            color: white;
+            z-index: 2;
+            transform: translateY(calc(100% - 3.5rem));
+            transition: transform 0.5s ease;
+        }
+        
+        .solution-card:hover .solution-card-content {
+            transform: translateY(0);
+        }
+        
+        .solution-card-title {
+            font-size: 1.25rem;
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+            transform: translateY(-5px);
+            transition: transform 0.5s ease;
+        }
+        
+        .solution-card:hover .solution-card-title {
+            transform: translateY(0);
+        }
+        
+        .solution-card-description {
+            font-size: 0.9rem;
+            color: rgba(255, 255, 255, 0.9);
+            margin-bottom: 1rem;
+            line-height: 1.5;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+        
+        .solution-card-features {
+            margin-bottom: 1rem;
+        }
+        
+        .solution-card-feature {
+            font-size: 0.85rem;
+            color: rgba(255, 255, 255, 0.8);
+            margin-bottom: 0.5rem;
+        }
+        
+        .solution-card-link {
+            display: inline-flex;
+            align-items: center;
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 0.9rem;
+            transition: color 0.3s ease;
+        }
+        
+        .solution-card-link:hover {
+            color: #0066cc;
+        }
+        
+        .solution-card-link svg {
+            margin-left: 0.5rem;
+            width: 16px;
+            height: 16px;
+        }
+        
+        /* Responsive Adjustments */
+        @media (min-width: 768px) {
+            .solutions-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+        
+        @media (min-width: 1024px) {
+            .solutions-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+
+        /* Footer Styles */
+        .footer {
+            background-color: #161E2A;
+            color: white;
+            padding: 4rem 0;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .footer-top {
+            display: flex;
+            flex-direction: column;
+            gap: 3rem;
+            margin-bottom: 3rem;
+        }
+        
+        @media (min-width: 1024px) {
+            .footer-top {
+                flex-direction: row;
+            }
+        }
+        
+        .footer-left {
+            flex: 1;
+            max-width: 100%;
+        }
+        
+        @media (min-width: 1024px) {
+            .footer-left {
+                max-width: 300px;
+            }
+        }
+        
+        .footer-logo {
+            display: flex;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+        
+        .footer-logo-img {
+            height: 2rem;
+            width: auto;
+            margin-right: 1rem;
+        }
+        
+        .footer-logo-text {
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+        
+        .footer-description {
+            font-size: 0.875rem;
+            color: rgba(255, 255, 255, 0.6);
+            margin-bottom: 1.5rem;
+            line-height: 1.6;
+        }
+        
+        .footer-social {
+            display: flex;
+            gap: 1rem;
+        }
+        
+        .social-link {
+            width: 2.5rem;
+            height: 2.5rem;
+            border-radius: 50%;
+            background-color: rgba(255, 255, 255, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background-color 0.3s ease;
+        }
+        
+        .social-link:hover {
+            background-color: rgba(255, 255, 255, 0.2);
+        }
+        
+        .social-icon {
+            width: 1.25rem;
+            height: 1.25rem;
+            color: white;
+        }
+        
+        .footer-nav {
+            display: grid;
+            grid-template-columns: repeat(1, 1fr);
+            gap: 2rem;
+            flex: 2;
+        }
+        
+        @media (min-width: 768px) {
+            .footer-nav {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+        
+        @media (min-width: 1024px) {
+            .footer-nav {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+        
+        .footer-nav-title {
+            font-size: 1.125rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+        }
+        
+        .footer-nav-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        
+        .footer-nav-list li {
+            margin-bottom: 1rem;
+        }
+        
+        .footer-nav-link {
+            color: rgba(255, 255, 255, 0.6);
+            text-decoration: none;
+            font-size: 0.875rem;
+            transition: color 0.3s ease;
+        }
+        
+        .footer-nav-link:hover {
+            color: white;
+        }
+        
+        .footer-middle {
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 2rem 0;
+            margin-bottom: 2rem;
+        }
+        
+        .footer-middle-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1.5rem;
+        }
+        
+        @media (min-width: 768px) {
+            .footer-middle-content {
+                flex-direction: row;
+                justify-content: space-between;
+                align-items: center;
+            }
+        }
+        
+        .footer-middle-left {
+            text-align: center;
+        }
+        
+        @media (min-width: 768px) {
+            .footer-middle-left {
+                text-align: left;
+            }
+        }
+        
+        .footer-middle-title {
+            font-size: 1.125rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+        
+        .footer-middle-description {
+            font-size: 0.875rem;
+            color: rgba(255, 255, 255, 0.6);
+        }
+        
+        .footer-subscribe {
+            display: flex;
+            width: 100%;
+            max-width: 400px;
+        }
+        
+        .footer-subscribe-input {
+            flex: 1;
+            padding: 0.75rem 1rem;
+            background-color: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 0.5rem 0 0 0.5rem;
+            color: white;
+            font-size: 0.875rem;
+            outline: none;
+            transition: all 0.3s ease;
+        }
+        
+        .footer-subscribe-input::placeholder {
+            color: rgba(255, 255, 255, 0.4);
+        }
+        
+        .footer-subscribe-input:focus {
+            border-color: rgba(255, 255, 255, 0.3);
+            box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.1);
+        }
+        
+        .footer-subscribe-button {
+            padding: 0.75rem 1.5rem;
+            background-color: white;
+            color: #161E2A;
+            border: none;
+            border-radius: 0 0.5rem 0.5rem 0;
+            font-weight: 500;
+            font-size: 0.875rem;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        
+        .footer-subscribe-button:hover {
+            background-color: rgba(255, 255, 255, 0.9);
+        }
+        
+        .footer-bottom {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+        
+        .footer-contact {
+            display: grid;
+            grid-template-columns: repeat(1, 1fr);
+            gap: 1.5rem;
+        }
+        
+        @media (min-width: 768px) {
+            .footer-contact {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+        
+        @media (min-width: 1024px) {
+            .footer-contact {
+                grid-template-columns: repeat(4, 1fr);
+            }
+        }
+        
+        .footer-contact-item {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .footer-contact-title {
+            font-size: 0.875rem;
+            font-weight: 500;
+            margin-bottom: 0.75rem;
+        }
+        
+        .footer-contact-text {
+            font-size: 0.875rem;
+            color: rgba(255, 255, 255, 0.6);
+            margin: 0;
+        }
+        
+        .footer-copyright {
+            text-align: center;
+            padding-top: 1.5rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .footer-copyright p {
+            font-size: 0.75rem;
+            color: rgba(255, 255, 255, 0.5);
+            margin: 0;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <nav>
+            <div class="logo">
+                <img src="images/logo.png" alt="天启科技">
+            </div>
+            <ul class="nav-links">
+                <li><a href="#">首页</a></li>
+                <li><a href="#tianqi-xingzuo">天启星座</a></li>
+                <li><a href="#tianqi-products">天启产品</a></li>
+                <li><a href="#solutions">解决方案</a></li>
+                <li><a href="#news">新闻资讯</a></li>
+                <li><a href="#about">关于天启</a></li>
+            </ul>
+        </nav>
+    </header>
+    
+    <section class="hero">
+        <div class="banner-carousel" id="bannerCarousel">
+            <div class="carousel-content" id="carouselContent"></div>
+            <button class="carousel-prev" id="carouselPrev" aria-label="Previous slide">&lt;</button>
+            <button class="carousel-next" id="carouselNext" aria-label="Next slide">&gt;</button>
+            <div class="carousel-indicators" id="carouselIndicators"></div>
+            <div class="banner-overlay">
+                <div class="container">
+                    <div class="hero-content">
+                        <h1>为全球物联网用户提供消费级“空天地海"</h1>
+                        <p>为全球物联网用户提供消费级“空天地海”一体化数据通信服务。</p>
+                        <p>全球覆盖 • 稳定可靠 • 低延迟</p>
+                    </div>
+                </div>
+            </div>
+            <div class="banner-cta">
+                <div class="container">
+                    <a href="#" class="btn" id="bannerCta">了解更多</a>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <section id="tianqi-xingzuo" class="container">
+        <h2>天启星座</h2>
+        <div class="grid">
+            <div class="card">
+                <img src="images/banner/1.jpg" alt="天启星座1">
+                <div class="card-content">
+                    <h3>星座系统</h3>
+                    <p>先进的星座网络架构，提供全球覆盖的通信服务。</p>
+                    <a href="#" class="btn">了解更多</a>
+                </div>
+            </div>
+            <div class="card">
+                <img src="images/banner/2.png" alt="天启星座2">
+                <div class="card-content">
+                    <h3>卫星技术</h3>
+                    <p>领先的卫星设计与制造技术，确保系统可靠性。</p>
+                    <a href="#" class="btn">了解更多</a>
+                </div>
+            </div>
+            <div class="card">
+                <img src="images/banner/3.png" alt="天启星座3">
+                <div class="card-content">
+                    <h3>应用场景</h3>
+                    <p>广泛应用于通信、导航、遥感等多个领域。</p>
+                    <a href="#" class="btn">了解更多</a>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <section id="tianqi-products" class="models-section">
+        <div class="container">
+            <h2>天启产品</h2>
+            <div class="model-display-container">
+                <!-- 三栏布局 -->
+                <div class="model-layout">
+                    <!-- 左侧模型列表 -->
+                    <div class="model-list">
+                        <div class="model-list-inner">
+                            <div class="model-items" id="modelItems"></div>
+                        </div>
+                    </div>
+                    
+                    <!-- 中间模型展示 -->
+                    <div class="model-viewer-container">
+                        <model-viewer
+                            id="modelViewer"
+                            src="models/TQ400-GM10.gltf"
+                            alt="天启产品模型"
+                            auto-rotate
+                            camera-controls
+                            shadow-intensity="0.5"
+                            environment-image="neutral"
+                            exposure="1"
+                            style="width: 100%; height: 100%;"
+                            camera-orbit="0deg 75deg 105%"
+                            field-of-view="30deg"
+                        ></model-viewer>
+                    </div>
+                    
+                    <!-- 右侧模型信息 -->
+                    <div class="model-info">
+                        <div class="model-info-inner" id="modelInfo"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <section id="solutions" class="models-section">
+        <div class="container">
+            <h2>解决方案</h2>
+            <div class="solutions-grid" id="solutionsGrid"></div>
+        </div>
+    </section>
+    
+    <section id="news" class="models-section">
+        <div class="container">
+            <h2>新闻资讯</h2>
+            <div class="grid">
+                <div class="card">
+                    <img src="images/xinwen/301.jpg" alt="新闻1">
+                    <div class="card-content">
+                        <h3>公司动态</h3>
+                        <p>天启科技最新发展动态，行业领先技术发布。</p>
+                        <a href="#" class="btn">阅读更多</a>
+                    </div>
+                </div>
+                <div class="card">
+                    <img src="images/xinwen/302.jpg" alt="新闻2">
+                    <div class="card-content">
+                        <h3>行业资讯</h3>
+                        <p>航天科技行业最新资讯，市场趋势分析。</p>
+                        <a href="#" class="btn">阅读更多</a>
+                    </div>
+                </div>
+                <div class="card">
+                    <img src="images/xinwen/303.jpg" alt="新闻3">
+                    <div class="card-content">
+                        <h3>技术前沿</h3>
+                        <p>探索航天技术前沿，引领行业创新发展。</p>
+                        <a href="#" class="btn">阅读更多</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <section id="about" class="container">
+        <h2>关于天启</h2>
+        <div style="display: flex; gap: 2rem; align-items: center; flex-wrap: wrap;">
+            <div style="flex: 1; min-width: 300px;">
+                <img src="images/banner/4.jpg" alt="关于天启" style="width: 100%; border-radius: 8px;">
+            </div>
+            <div style="flex: 2; min-width: 300px;">
+                <h3>公司简介</h3>
+                <p>天启科技是一家专注于航天科技领域的高新技术企业，致力于为全球客户提供优质的卫星通信、导航、遥感等服务。</p>
+                <h3>发展历程</h3>
+                <p>公司自成立以来，始终坚持技术创新，不断突破关键技术，取得了一系列重要成果。</p>
+                <h3>企业文化</h3>
+                <p>以科技创新为核心，以客户需求为导向，追求卓越，成就梦想。</p>
+            </div>
+        </div>
+    </section>
+    
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-top">
+                <div class="footer-left">
+                    <div class="footer-logo">
+                        <img src="images/logo.png" alt="天启科技" class="footer-logo-img">
+                        <span class="footer-logo-text">天启科技</span>
+                    </div>
+                    <p class="footer-description">
+                        天启星座是我国首个自主可控的低轨卫星物联网星座，提供全天候、全覆盖的数据通信服务，赋能智慧地球。
+                    </p>
+                    <div class="footer-social">
+                        <a href="#" class="social-link" aria-label="Facebook">
+                            <svg class="social-icon" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M24 4.557c-.883.392-1.832.656-2.828.775 1.017-.609 1.798-1.574 2.165-2.724-.951.564-2.005.974-3.127 1.195-.897-.957-2.178-1.555-3.594-1.555-3.179 0-5.515 2.966-4.797 6.045-4.091-.205-7.719-2.165-10.148-5.144-1.29 2.213-.669 5.108 1.523 6.574-.806-.026-1.566-.247-2.229-.616-.054 2.281 1.581 4.415 3.949 4.89-.693.188-1.452.232-2.224.084.626 1.956 2.444 3.379 4.6 3.419-2.07 1.623-4.678 2.348-7.29 2.04 2.179 1.397 4.768 2.212 7.548 2.212 9.142 0 14.307-7.721 13.995-14.646.962-.695 1.797-1.562 2.457-2.549z"></path>
+                            </svg>
+                        </a>
+                        <a href="#" class="social-link" aria-label="Twitter">
+                            <svg class="social-icon" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M12 2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"></path>
+                            </svg>
+                        </a>
+                        <a href="#" class="social-link" aria-label="LinkedIn">
+                            <svg class="social-icon" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"></path>
+                            </svg>
+                        </a>
+                        <a href="#" class="social-link" aria-label="Instagram">
+                            <svg class="social-icon" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"></path>
+                            </svg>
+                        </a>
+                    </div>
+                </div>
+                
+                <div class="footer-nav">
+                    <div class="footer-nav-column">
+                        <h3 class="footer-nav-title">天启星座</h3>
+                        <ul class="footer-nav-list">
+                            <li><a href="#tianqi-xingzuo" class="footer-nav-link">星座介绍</a></li>
+                            <li><a href="#tianqi-xingzuo" class="footer-nav-link">系统构成</a></li>
+                            <li><a href="#tianqi-xingzuo" class="footer-nav-link">建设历程</a></li>
+                            <li><a href="#tianqi-xingzuo" class="footer-nav-link">星座优势</a></li>
+                        </ul>
+                    </div>
+                    
+                    <div class="footer-nav-column">
+                        <h3 class="footer-nav-title">天启产品</h3>
+                        <ul class="footer-nav-list">
+                            <li><a href="#tianqi-products" class="footer-nav-link">模组</a></li>
+                            <li><a href="#tianqi-products" class="footer-nav-link">终端</a></li>
+                            <li><a href="#tianqi-products" class="footer-nav-link">小型集成产品</a></li>
+                            <li><a href="#solutions" class="footer-nav-link">解决方案</a></li>
+                        </ul>
+                    </div>
+                    
+                    <div class="footer-nav-column">
+                        <h3 class="footer-nav-title">关于我们</h3>
+                        <ul class="footer-nav-list">
+                            <li><a href="#about" class="footer-nav-link">了解我们</a></li>
+                            <li><a href="#news" class="footer-nav-link">新闻资讯</a></li>
+                            <li><a href="#about" class="footer-nav-link">加入我们</a></li>
+                            <li><a href="#about" class="footer-nav-link">联系我们</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="footer-middle">
+                <div class="footer-middle-content">
+                    <div class="footer-middle-left">
+                        <h3 class="footer-middle-title">关注天启科技</h3>
+                        <p class="footer-middle-description">第一时间获取天启科技的最新资讯</p>
+                    </div>
+                    <div class="footer-middle-right">
+                        <div class="footer-subscribe">
+                            <input 
+                                type="email" 
+                                placeholder="请输入您的邮箱" 
+                                class="footer-subscribe-input"
+                            >
+                            <button class="footer-subscribe-button">订阅</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="footer-bottom">
+                <div class="footer-contact">
+                    <div class="footer-contact-item">
+                        <h4 class="footer-contact-title">业务咨询</h4>
+                        <p class="footer-contact-text">400-8988688 / 186 0116 3690</p>
+                    </div>
+                    <div class="footer-contact-item">
+                        <h4 class="footer-contact-title">宣传合作</h4>
+                        <p class="footer-contact-text">186 1222 6309</p>
+                    </div>
+                    <div class="footer-contact-item">
+                        <h4 class="footer-contact-title">邮箱</h4>
+                        <p class="footer-contact-text">postmaster@guodiangaoke.com</p>
+                    </div>
+                    <div class="footer-contact-item">
+                        <h4 class="footer-contact-title">地址</h4>
+                        <p class="footer-contact-text">北京市海淀区丰秀中路三号院6号楼</p>
+                    </div>
+                </div>
+                <div class="footer-copyright">
+                    <p>Copyright 2015-2030北京国电高科科技有限公司  京公网安备11010802038740号 京ICP备18008038号-1</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+    
+    <script>
+        // 平滑滚动
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({ 
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // Banner Carousel Implementation
+        class BannerCarousel {
+            constructor() {
+                this.currentIndex = 0;
+                this.autoPlayInterval = null;
+                this.autoPlayDelay = 5000;
+                this.mediaFiles = [];
+                this.isPlaying = false;
+                
+                this.init();
+            }
+
+            async init() {
+                await this.loadMediaFiles();
+                this.renderCarousel();
+                this.setupEventListeners();
+                this.startAutoPlay();
+            }
+
+            // Simulate loading media files from the server
+            // In a real scenario, you would fetch this list from an API
+            async loadMediaFiles() {
+                // Mock data for the banner media files
+                // These files should exist in the images/banner directory
+                const mockFiles = [
+                    { name: '1.jpg', path: 'images/banner/1.jpg', type: 'image' },
+                    { name: '2.png', path: 'images/banner/2.png', type: 'image' },
+                    { name: '27.mp4', path: 'images/banner/27.mp4', type: 'video' },
+                    { name: '3.png', path: 'images/banner/3.png', type: 'image' },
+                    { name: '4.jpg', path: 'images/banner/4.jpg', type: 'image' },
+                    { name: '5.jpg', path: 'images/banner/5.jpg', type: 'image' },
+                    { name: '6.jpg', path: 'images/banner/6.jpg', type: 'image' }
+                ];
+
+                // Validate which files actually exist
+                const validFiles = [];
+                for (const file of mockFiles) {
+                    try {
+                        // Use fetch to check if the file exists
+                        await fetch(file.path, { method: 'HEAD' });
+                        validFiles.push(file);
+                    } catch (error) {
+                        console.warn(`File not found: ${file.path}`);
+                    }
+                }
+
+                this.mediaFiles = validFiles;
+            }
+
+            renderCarousel() {
+                const carouselContent = document.getElementById('carouselContent');
+                const carouselIndicators = document.getElementById('carouselIndicators');
+
+                if (this.mediaFiles.length === 0) {
+                    console.warn('No valid media files found for banner carousel');
+                    return;
+                }
+
+                // Render carousel items
+                carouselContent.innerHTML = this.mediaFiles.map((file, index) => {
+                    if (file.type === 'image') {
+                        return `
+                            <div class="carousel-item" data-index="${index}">
+                                <img src="${file.path}" alt="Banner ${index + 1}">
+                            </div>
+                        `;
+                    } else {
+                        return `
+                            <div class="carousel-item" data-index="${index}">
+                                <video autoplay muted playsinline loop>
+                                    <source src="${file.path}" type="video/mp4">
+                                </video>
+                            </div>
+                        `;
+                    }
+                }).join('');
+
+                // Render indicators
+                carouselIndicators.innerHTML = this.mediaFiles.map((_, index) => {
+                    return `
+                        <button 
+                            class="carousel-indicator ${index === 0 ? 'active' : ''}" 
+                            data-index="${index}" 
+                            aria-label="Go to slide ${index + 1}"
+                        ></button>
+                    `;
+                }).join('');
+
+                // Set initial position
+                this.updateCarouselPosition();
+            }
+
+            setupEventListeners() {
+                // Previous button
+                document.getElementById('carouselPrev').addEventListener('click', () => {
+                    this.previousSlide();
+                    this.resetAutoPlay();
+                });
+
+                // Next button
+                document.getElementById('carouselNext').addEventListener('click', () => {
+                    this.nextSlide();
+                    this.resetAutoPlay();
+                });
+
+                // Indicators
+                document.querySelectorAll('.carousel-indicator').forEach(indicator => {
+                    indicator.addEventListener('click', (e) => {
+                        const index = parseInt(e.target.dataset.index);
+                        this.goToSlide(index);
+                        this.resetAutoPlay();
+                    });
+                });
+
+                // Video events
+                document.querySelectorAll('.carousel-item video').forEach(video => {
+                    video.addEventListener('play', () => {
+                        this.pauseAutoPlay();
+                    });
+                    video.addEventListener('pause', () => {
+                        this.startAutoPlay();
+                    });
+                    video.addEventListener('ended', () => {
+                        this.nextSlide();
+                        this.startAutoPlay();
+                    });
+                });
+            }
+
+            updateCarouselPosition() {
+                const carouselContent = document.getElementById('carouselContent');
+                const offset = -this.currentIndex * 100;
+                carouselContent.style.transform = `translateX(${offset}%)`;
+                this.updateIndicators();
+                this.updateCTA();
+            }
+
+            updateIndicators() {
+                document.querySelectorAll('.carousel-indicator').forEach((indicator, index) => {
+                    indicator.classList.toggle('active', index === this.currentIndex);
+                });
+            }
+
+            updateCTA() {
+                const cta = document.getElementById('bannerCta');
+                const links = [
+                    '#',
+                    '#tianqi-xingzuo',
+                    '#tianqi-products',
+                    '#solutions',
+                    '#news',
+                    '#about',
+                    '#'
+                ];
+                cta.href = links[this.currentIndex % links.length];
+            }
+
+            previousSlide() {
+                this.currentIndex = (this.currentIndex - 1 + this.mediaFiles.length) % this.mediaFiles.length;
+                this.updateCarouselPosition();
+            }
+
+            nextSlide() {
+                this.currentIndex = (this.currentIndex + 1) % this.mediaFiles.length;
+                this.updateCarouselPosition();
+            }
+
+            goToSlide(index) {
+                this.currentIndex = index;
+                this.updateCarouselPosition();
+            }
+
+            startAutoPlay() {
+                if (!this.isPlaying && this.mediaFiles.length > 1) {
+                    this.isPlaying = true;
+                    this.autoPlayInterval = setInterval(() => {
+                        this.nextSlide();
+                    }, this.autoPlayDelay);
+                }
+            }
+
+            pauseAutoPlay() {
+                if (this.isPlaying) {
+                    this.isPlaying = false;
+                    clearInterval(this.autoPlayInterval);
+                    this.autoPlayInterval = null;
+                }
+            }
+
+            resetAutoPlay() {
+                this.pauseAutoPlay();
+                this.startAutoPlay();
+            }
+        }
+
+        // 3D Model Display Implementation
+        class ModelDisplay {
+            constructor() {
+                this.models = [];
+                this.selectedModel = null;
+                this.modelInfos = {
+                    'TQ400-GM10': {
+                        title: '天启400-GM10模组',
+                        description: '高性能卫星通信终端模组，集成UHF频段、北斗/GPS双模定位与低功耗设计，专为高速运动场景下的可靠数据传输打造。',
+                        buyLink: '#',
+                        detailLink: '#tianqi-products'
+                    },
+                    'TQ400-GM12': {
+                        title: '天启400-GM12模组',
+                        description: '高性能卫星通信终端模组，集成UHF频段、北斗/GPS双模定位与低功耗设计，专为高速运动场景下的可靠数据传输打造。',
+                        buyLink: '#',
+                        detailLink: '#tianqi-products'
+                    },
+                    'TQZD-08': {
+                        title: '天启TQZD-08终端',
+                        description: '高性能卫星通信终端，集成UHF频段、北斗/GPS双模定位与低功耗设计，专为高速运动场景下的可靠数据传输打造。',
+                        buyLink: '#',
+                        detailLink: '#tianqi-products'
+                    },
+                    'TQZD-10': {
+                        title: '天启TQZD-10终端',
+                        description: '高性能卫星通信终端，集成UHF频段、北斗/GPS双模定位与低功耗设计，专为高速运动场景下的可靠数据传输打造。',
+                        buyLink: '#',
+                        detailLink: '#tianqi-products'
+                    },
+                    'Alarm-03': {
+                        title: '天启应急求救终端Alarm-03',
+                        description: '高性能卫星通信终端，集成UHF频段、北斗/GPS双模定位与低功耗设计，专为应急求救场景打造。',
+                        buyLink: '#',
+                        detailLink: '#tianqi-products'
+                    },
+                    'TQDB-01': {
+                        title: '天启TQDB-01终端',
+                        description: '高性能卫星通信终端，集成UHF频段、北斗/GPS双模定位与低功耗设计，专为数据采集场景打造。',
+                        buyLink: '#',
+                        detailLink: '#tianqi-products'
+                    },
+                    '400-GM20': {
+                        title: '天启400-GM20模组',
+                        description: '高性能卫星通信终端模组，集成UHF频段、北斗/GPS双模定位与低功耗设计，专为高速运动场景下的可靠数据传输打造。',
+                        buyLink: '#',
+                        detailLink: '#tianqi-products'
+                    }
+                };
+                
+                this.init();
+            }
+
+            async init() {
+                await this.loadModels();
+                this.renderModelList();
+                this.setupEventListeners();
+            }
+
+            // Load models from the models directory
+            async loadModels() {
+                // Mock model list based on available files in the models directory
+                const modelFiles = [
+                    '400-GM20.gltf',
+                    'Alarm-03.gltf',
+                    'TQ400-GM10.gltf',
+                    'TQ400-GM12.gltf',
+                    'TQDB-01.gltf',
+                    'TQZD-08.gltf',
+                    'TQZD-10.gltf'
+                ];
+
+                // Validate which files actually exist
+                const validModels = [];
+                for (const fileName of modelFiles) {
+                    try {
+                        const response = await fetch(`models/${fileName}`, { method: 'HEAD' });
+                        if (response.ok) {
+                            const modelName = fileName.substring(0, fileName.lastIndexOf('.'));
+                            validModels.push({
+                                name: modelName,
+                                src: `models/${fileName}`,
+                                alt: `${modelName}模型`
+                            });
+                        }
+                    } catch (error) {
+                        console.warn(`Model file not found: ${fileName}`);
+                    }
+                }
+
+                // Sort models by name
+                validModels.sort((a, b) => a.name.localeCompare(b.name));
+                
+                this.models = validModels;
+                
+                if (validModels.length > 0) {
+                    this.selectedModel = validModels[0];
+                    this.updateModelViewer();
+                    this.updateModelInfo();
+                }
+            }
+
+            // Render the model list
+            renderModelList() {
+                const modelItemsContainer = document.getElementById('modelItems');
+                
+                if (this.models.length === 0) {
+                    modelItemsContainer.innerHTML = '<p style="text-align: center; color: #666;">暂无3D模型</p>';
+                    return;
+                }
+
+                modelItemsContainer.innerHTML = this.models.map(model => {
+                    const isActive = this.selectedModel && this.selectedModel.name === model.name;
+                    return `
+                        <div class="model-item ${isActive ? 'active' : ''}" data-model-name="${model.name}">
+                            <h4>${model.name}</h4>
+                        </div>
+                    `;
+                }).join('');
+            }
+
+            // Setup event listeners
+            setupEventListeners() {
+                // Model item click event
+                document.addEventListener('click', (e) => {
+                    if (e.target.closest('.model-item')) {
+                        const modelItem = e.target.closest('.model-item');
+                        const modelName = modelItem.dataset.modelName;
+                        this.selectModel(modelName);
+                    }
+                });
+            }
+
+            // Select a model
+            selectModel(modelName) {
+                const model = this.models.find(m => m.name === modelName);
+                if (model) {
+                    this.selectedModel = model;
+                    this.renderModelList();
+                    this.updateModelViewer();
+                    this.updateModelInfo();
+                }
+            }
+
+            // Update the model viewer
+            updateModelViewer() {
+                const modelViewer = document.getElementById('modelViewer');
+                if (modelViewer && this.selectedModel) {
+                    modelViewer.src = this.selectedModel.src;
+                    modelViewer.alt = this.selectedModel.alt;
+                }
+            }
+
+            // Update the model info
+            updateModelInfo() {
+                const modelInfoContainer = document.getElementById('modelInfo');
+                if (!this.selectedModel) {
+                    modelInfoContainer.innerHTML = '<p style="text-align: center; color: #666;">请选择一个3D模型查看详细信息</p>';
+                    return;
+                }
+
+                const modelInfo = this.modelInfos[this.selectedModel.name] || {
+                    title: this.selectedModel.name,
+                    description: '暂无详细信息',
+                    buyLink: '#',
+                    detailLink: '#tianqi-products'
+                };
+
+                modelInfoContainer.innerHTML = `
+                    <h3>${modelInfo.title}</h3>
+                    <p>${modelInfo.description}</p>
+                    <div class="model-actions">
+                        <a href="${modelInfo.buyLink}" class="btn btn-primary">立即购买</a>
+                        <a href="${modelInfo.detailLink}" class="btn btn-secondary">了解详情</a>
+                    </div>
+                `;
+            }
+        }
+
+        // Solutions Display Implementation
+        class SolutionsDisplay {
+            constructor() {
+                this.images = [];
+                this.loadedImages = new Set();
+                this.solutionContents = {
+                    '201': {
+                        title: '水利行业解决方案',
+                        description: '天启星座助力天地一体化水利感知网建设，推动水利行业智能化升级',
+                        features: ['河道巡护', '水网检测', '水利工程检测']
+                    },
+                    '202': {
+                        title: '林草行业解决方案',
+                        description: '天启星座助力天地一体化林草监测网建设，助力林草资源监测数智升级',
+                        features: ['林区巡护', '动植物保护', '生态环境检测']
+                    },
+                    '203': {
+                        title: '应急行业解决方案',
+                        description: '天启星座面向灾害监测和应急指挥提供全域全时、高可靠应急通信链路',
+                        features: ['灾害监测', '指挥救援', '应急告警']
+                    },
+                    '204': {
+                        title: '能源行业解决方案',
+                        description: '天启星座助力天地一体化石油、电力感知网建设，推动能源行业智能化升级',
+                        features: ['风机检测', '输电线路检测', '油井检测']
+                    },
+                    '205': {
+                        title: '智慧交通解决方案',
+                        description: '天启星座助力功能机械、低空监管等，推动交通行业智能化发展',
+                        features: ['车辆装备管理', '公路边坡监测', '无人机监管']
+                    },
+                    '206': {
+                        title: '海洋领域解决方案',
+                        description: '天启星座突破海上通信限制，构建全域高可靠的海洋感知通信网络',
+                        features: ['船联网', '货联网', '感知网']
+                    },
+                    '207': {
+                        title: 'Toc领域解决方案',
+                        description: '天启星座融入消费应用，为户外探险与文旅活动安全通信保障',
+                        features: ['野外探险', '户外赛事', '海外通信']
+                    },
+                    '208': {
+                        title: '通信解决方案',
+                        description: '提供高效可靠的通信网络解决方案，满足不同场景需求',
+                        features: ['卫星通信', '地面网络', '混合通信']
+                    },
+                    '209': {
+                        title: '导航解决方案',
+                        description: '高精度导航定位服务，广泛应用于交通、物流等领域',
+                        features: ['卫星导航', '惯性导航', '组合导航']
+                    }
+                };
+                
+                this.init();
+            }
+
+            async init() {
+                await this.loadImages();
+                this.renderSolutions();
+            }
+
+            // Load images from the tianqijiejuefangan directory
+            async loadImages() {
+                // Mock image list based on available files in the directory
+                const imageFiles = [
+                    '201.jpg',
+                    '202.jpg',
+                    '203.jpg',
+                    '204.jpg',
+                    '205.jpg',
+                    '206.jpg',
+                    '207.jpg',
+                    '208.jpg',
+                    '209.jpg',
+                    '21a2dd104535747.5f735b88e2564.jpg',
+                    '5f701f104535747.5f735b88e1c61.jpg',
+                    '791490105941489.5f84aded39153.jpg'
+                ];
+
+                // Validate which files actually exist
+                const validImages = [];
+                for (const fileName of imageFiles) {
+                    try {
+                        const response = await fetch(`images/tianqijiejuefangan/${fileName}`, { method: 'HEAD' });
+                        if (response.ok) {
+                            validImages.push({
+                                name: fileName,
+                                path: `images/tianqijiejuefangan/${fileName}`
+                            });
+                        }
+                    } catch (error) {
+                        console.warn(`Solution image not found: ${fileName}`);
+                    }
+                }
+
+                // Sort images by name
+                validImages.sort((a, b) => a.name.localeCompare(b.name));
+                
+                this.images = validImages;
+            }
+
+            // Render the solutions grid
+            renderSolutions() {
+                const solutionsGrid = document.getElementById('solutionsGrid');
+                
+                if (this.images.length === 0) {
+                    solutionsGrid.innerHTML = '<p style="text-align: center; color: #666;">暂无解决方案</p>';
+                    return;
+                }
+
+                solutionsGrid.innerHTML = this.images.map((image, index) => {
+                    return `
+                        <div class="solution-card" data-index="${index}">
+                            <div class="solution-card-image-container">
+                                <img 
+                                    src="${image.path}" 
+                                    alt="${image.name}"
+                                    class="solution-card-image"
+                                    onload="solutionsDisplay.handleImageLoad('${image.path}')"
+                                    onError="solutionsDisplay.handleImageError('${image.path}', ${index})"
+                                    style="opacity: 0; display: none;"
+                                >
+                            </div>
+                            <div class="solution-card-gradient-full"></div>
+                            <div class="solution-card-gradient-bottom"></div>
+                            <div class="solution-card-content">
+                                <h3 class="solution-card-title">${this.getSolutionTitle(image.name)}</h3>
+                                <p class="solution-card-description">${this.getSolutionDescription(image.name)}</p>
+                                <div class="solution-card-features">
+                                    ${this.getSolutionFeatures(image.name).map(feature => `
+                                        <div class="solution-card-feature">• ${feature}</div>
+                                    `).join('')}
+                                </div>
+                                <a href="#solutions" class="solution-card-link">
+                                    了解更多
+                                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                                    </svg>
+                                </a>
+                            </div>
+                        </div>
+                    `;
+                }).join('');
+            }
+
+            // Handle image load
+            handleImageLoad(path) {
+                this.loadedImages.add(path);
+                const image = document.querySelector(`img[src="${path}"]`);
+                if (image) {
+                    image.style.opacity = '1';
+                    image.style.display = 'block';
+                }
+            }
+
+            // Handle image error
+            handleImageError(path, index) {
+                console.error(`Failed to load image: ${path}`);
+                this.loadedImages.delete(path);
+                // Optionally, remove the card or show a placeholder
+            }
+
+            // Get solution title based on image name
+            getSolutionTitle(imageName) {
+                const imageNumber = imageName.replace(/\..+$/, '');
+                return this.solutionContents[imageNumber]?.title || imageNumber;
+            }
+
+            // Get solution description based on image name
+            getSolutionDescription(imageName) {
+                const imageNumber = imageName.replace(/\..+$/, '');
+                return this.solutionContents[imageNumber]?.description || '暂无详细描述';
+            }
+
+            // Get solution features based on image name
+            getSolutionFeatures(imageName) {
+                const imageNumber = imageName.replace(/\..+$/, '');
+                return this.solutionContents[imageNumber]?.features || [];
+            }
+        }
+
+        // Initialize components when the DOM is loaded
+        let solutionsDisplay;
+        document.addEventListener('DOMContentLoaded', () => {
+            new BannerCarousel();
+            new ModelDisplay();
+            solutionsDisplay = new SolutionsDisplay();
+        });
+    </script>
+</body>
+</html>
